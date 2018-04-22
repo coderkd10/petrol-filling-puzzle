@@ -7,7 +7,7 @@ On the way between S and D there are N petrol pumps - F1, F2, ..., FN.
 We start at S with our tank full and may fill any amount of petrol at any of the pumps (in multiples of 1l, upto the max capacity of tank) in order to reach the station.  
 We need to find the most cost effective way to do so.  
 
-**Input** - all distances, tank capacity, price at each pump, milegage of vehicle (which is constant))  
+**Input** - all distances, tank capacity, price at each pump, milegage of vehicle (which is constant).  
 **Oupt** - Amount of petrol to be bought at each pump to minimize total cost.
 
 ## Greedy Strategy
