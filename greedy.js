@@ -26,13 +26,16 @@ const dist = (i,j) => sum(distances.slice(i, j))
 // if we start from fp_i with x l of petrol, when we reach fp_j
 // what minimum amount of petrol in the tank that we can end up with
 const minTank = (i, j, x) => Math.max(0, x - dist(i,j)/mileage)
+// if we start from fp_i with x l of pertrol, and want to reach fp_j with y l
+// what should be the maximum possible value of x ?
+const maxTank = (i, j, y) => Math.min(capacity, y + dist(i,j)/mileage)
 // given i, j find k, such that fp_k has the cost between
-// fp_i+1, fp_i+2, ..., fp_j-1 (i.e, i and j exclusive)
+// fp_i, fp_i+2, ..., fp_j-1 (i.e, j exclusive)
 // 0 <= i, j <= N+2
 const findMinCost = (i, j) => {
-    let minIndex = i+1;
+    let minIndex = i;
     let minCost = cost(minIndex);
-    for (let k = i+2; k <= j-1; k++) {
+    for (let k = i+1; k <= j-1; k++) {
         if (cost(k) < minCost) {
             minIndex = k;
             minCost = cost(k);
@@ -58,6 +61,17 @@ const getOptimalHelper = (i, j, x, y) => {
     }
 
     const k = findMinCost(i, j);
+    if (k === i) {
+        // we want to have maximum possible petrol in tank here
+        const targetTank = maxTank(i, j, y);
+        const toBuy = targetTank - x;
+        const thisCost = cost(i)*toBuy;
+        const rightOpt = getOptimalHelper(i+1, j, targetTank - distances[i]/mileage, y);
+        if (rightOpt === null)
+            return null;
+        const [ rightAmounts, rightCost ] = rightOpt;
+        return [ [toBuy].concat(rightAmounts), thisCost + rightCost ];
+    }
     const tankOnArrivalAtK = minTank(i, k, x);
     const leftOpt = getOptimalHelper(i, k, x, tankOnArrivalAtK);
     if (leftOpt === null)
